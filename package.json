@@ -2,9 +2,9 @@
     "name": "rollavo-server",
     "version": "1.0.0",
     "scripts": {
-        "dev": "nodemon src/index.js",
         "build": "echo 'No build step'",
-        "start": "node dist/index.js"
+        "start": "node src/app.js",
+        "dev": "nodemon src/app.js"
     },
     "dependencies": {
         "bcryptjs": "^2.4.3",
