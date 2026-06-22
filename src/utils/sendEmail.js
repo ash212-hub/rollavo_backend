@@ -4,10 +4,12 @@ const User = require("../models/User");
 const Draw = require("../models/Draw");
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.resend.com",
+    port: 465,
+    secure: true,
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: "resend",
+        pass: process.env.RESEND_API_KEY,
     },
 });
 
@@ -15,7 +17,7 @@ const transporter = nodemailer.createTransport({
 async function sendWelcomeEmail(name, email) {
     try {
         await transporter.sendMail({
-            from: `"Rollavo" <${process.env.EMAIL_USER}>`,
+            from: `"Rollavo" <onboarding@resend.dev>`,
             to: email,
             subject: "Welcome to Rollavo 🎉",
             html: `
@@ -59,7 +61,7 @@ async function sendResetPasswordEmail(name, email, resetUrl) {
         console.log(name, email, resetUrl, "Password reset requested");
 
         await transporter.sendMail({
-            from: `"Rollavo" <${process.env.EMAIL_USER}>`,
+            from: `"Rollavo" <onboarding@resend.dev>`,
             to: email,
             subject: "Reset Your Rollavo Password 🔐",
             html: `
@@ -293,7 +295,7 @@ async function sendWinnerNotification(winner) {
         const draw = await Draw.findById(winner.drawId);
 
         const mailOptions = {
-            from: `"Birdie•Give" <${process.env.EMAIL_USER}>`,
+            from: `"Rollavo" <onboarding@resend.dev>`,
             to: user.email,
             subject: `🎉 You've Won £${winner.prizeAmount} in the Birdie•Give Draw!`,
             html: getWinnerEmailTemplate({
@@ -325,7 +327,7 @@ async function sendVerificationReminder(winner) {
         const daysRemaining = 7 - Math.floor((Date.now() - new Date(winner.createdAt).getTime()) / (1000 * 60 * 60 * 24));
 
         const mailOptions = {
-            from: `"Birdie•Give" <${process.env.EMAIL_USER}>`,
+            from: `"Rollavo" <onboarding@resend.dev>`,
             to: user.email,
             subject: `⏰ Reminder: Verify Your Prize in ${daysRemaining} Days`,
             html: `
@@ -377,7 +379,7 @@ async function sendPaymentConfirmation(winner) {
         }
 
         const mailOptions = {
-            from: `"Birdie•Give" <${process.env.EMAIL_USER}>`,
+            from: `"Rollavo" <onboarding@resend.dev>`,
             to: user.email,
             subject: `💰 Your Prize of £${winner.prizeAmount} Has Been Paid!`,
             html: `
